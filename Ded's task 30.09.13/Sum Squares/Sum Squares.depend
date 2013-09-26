@@ -1,6 +1,0 @@
-# depslib dependency file v1.0
-1380216459 source:e:\ides etc\codeblocks\projects\sum squares\main.c
-	<stdio.h>
-	<stdlib.h>
-	<math.h>
-
