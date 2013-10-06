@@ -3,40 +3,64 @@
 #include <memory.h>
 #include <assert.h>
 
-#define arrelem(arrname)(n)(m)      arrname[(n) * (n) + (m)]
+#define NDEBUG 1
 
-unsigned int p(int n, int k, unsigned int parray[])
+#define DEBUG if (0)
+
+unsigned int p(int n, int k, unsigned int * parray, int size)
 {
     assert(parray);
+    DEBUG {printf("Taking p(%d, %d)\n", n, k);}
     assert(k);
 
-    unsigned int * cell = &( arrelem(parray)(n)(k) );
+    unsigned int res = 0;
+
+    unsigned int * cell = parray + n * size + k;
 
     if (*cell)
         return *cell;
 
-    if (n < k)
-        return (*cell = p(n, n, parray));
+    else if (n < k)
+        return (*cell = p(n, n, parray, size));
 
-    return (*cell = p((n - k), k, parray) + p(n, (k - 1), parray));
+    else
+        return (*cell = p((n - k), k, parray, size) + p(n, (k - 1), parray, size));
 }
 
 int main()
 {
     int n = 0;
     scanf("%d", &n);
+    int size = n + 1;
 
-    static unsigned int * parray = (unsigned int *)calloc((n + 1) * (n + 1) , sizeof(int));
-    for(int i = 0; i < n + 1; i++)
-        for(int j = 0; j < n + 1; j++)
+    unsigned int * parray = (unsigned int *)calloc(size * size , sizeof(unsigned int));
+    assert(parray);
+    for(int i = 0; i < size; i++)
+        for(int j = 0; j < size; j++)
         {
             if (((i == 0) && (j != 0)) || (j == 1))
-                arrelem(parray)(i)(j) = 1;
+            {
+                *(parray + i * (size) + j) = 1;
+            }
             else
-                arrelem(parray)(i)(j) = 0;
+            {
+                *(parray + i * (size) + j) = 0;
+            }
         }
 
-    printf("%u", p(n, n, parray));
+    /*DEBUG
+    {
+        for(int i = 0; i < size; i++)
+        {
+            for(int j = 0; j < size; j++)
+            {
+                printf("[%d][%d]%u\t", i, j, *(parray + i * (size) + j));
+            }
+            printf("\n");
+        }
+    }*/
+
+    printf("%u", p(n, n, parray, size));
 
     return 0;
 }
