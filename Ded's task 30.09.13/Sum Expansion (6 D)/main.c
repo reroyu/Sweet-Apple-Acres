@@ -62,5 +62,7 @@ int main()
 
     printf("%u", p(n, n, parray, size));
 
+    free(parray);
+
     return 0;
 }
